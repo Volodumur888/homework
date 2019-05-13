@@ -9,10 +9,10 @@ function Init() {
 		NewsRequest(countryLang, category[i], GetNews);
 	}
 }
-$("input[type=button]").on("click",function (){
+/*$("input[type=button]").on("click",function (){
 		countryLang=$(this).val();
 		Init();
-	});
+	});*/
 function NewsRequest(countryLang, category, callback) {
 	var url = `https://newsapi.org/v2/top-headlines?country=${countryLang}&category=${category}&apiKey=38a60776992a40faa83f9d95a79a429a`;
 	let xhr = new XMLHttpRequest();
@@ -49,7 +49,6 @@ function Request(url, callback) {
   	};
 }
 function GetCurrency(data) {
-	///console.log("GetCurrency: ", data);
 	let currency = document.querySelector("#currency");
 	for (let i = 0; i < data.length; i++) {
 		let ccy = document.createElement("div");
@@ -68,7 +67,6 @@ function GetCurrency(data) {
 		sale.className = "sale";
 		sale.innerHTML = data[i].sale;
 		currency.appendChild(sale);
-		//console.log(data[i].ccy, " ", data[i].base_ccy, " buy: ", data[i].buy, " sale: ", data[i].sale);
 	}
 }
 function GetNews(category, data) {
