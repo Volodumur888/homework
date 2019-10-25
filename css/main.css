@@ -12,7 +12,17 @@ body {
     justify-content: flex-end;
     padding: 0;
 }
-
+.lang {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+}
+.lang input{
+    background: transparent;
+    color: #28a745;
+    border: 1px solid #FFE400;
+    border-radius: 40%;
+}
 .navigation {
     padding-top: 10px;
     padding-left: 0;
@@ -276,4 +286,8 @@ body {
 .currency .head--curr {
     display: block;
     text-align: center;
+}
+
+.weather{
+    color:whitesmoke;
 }

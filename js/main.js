@@ -1,18 +1,48 @@
-window.addEventListener("load", Init);
+﻿window.addEventListener("load", Init);
 var countryLang = "ua";
 function Init() {
 	let url = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
-	let category = ["sport", "science", "health", "entertainment", "technology", "business"];
-	console.log("init");
+	let category = ["sport", "science", "health", "entertainment", "technology"];
+	let urlWeather = "https://api.openweathermap.org/data/2.5/weather?q=rivne&lang=ua&units=metric&APPID=d7370c4f4680389e97fe267bbac3955e";
 	Request(url, GetCurrency);
 	for (i=0;i<category.length; i++){
 		NewsRequest(countryLang, category[i], GetNews);
 	}
+	WeatherRequest(urlWeather, GetWeather);
 }
-/*$("input[type=button]").on("click",function (){
+$("input[type=button]").on("click",function (){
 		countryLang=$(this).val();
+		var $sportNews = $("#sport").children();
+		var $scienceNews = $("#science").children();
+		var $healthNews = $("#health").children();
+		var $entertainmentNews = $("#entertainment").children();
+		var $technologyNews = $("#technology").children();
+		var $currency = $("#currency").children();
+		var $weather = $("#weather").children();
+		$sportNews.each(function (i,elem){
+			$(this).remove();
+		});
+		$scienceNews.each(function (i,elem){
+			$(this).remove();
+		});
+		$healthNews.each(function (i,elem){
+			$(this).remove();
+		});
+		$entertainmentNews.each(function (i,elem){
+			$(this).remove();
+		});
+		$technologyNews.each(function (i,elem){
+			$(this).remove();
+		});
+		$currency.each(function (i,elem){
+			$(this).remove();
+		});
+		$weather.each(function (i,elem){
+			$(this).remove();
+		});
 		Init();
-	});*/
+});
+	
 function NewsRequest(countryLang, category, callback) {
 	var url = `https://newsapi.org/v2/top-headlines?country=${countryLang}&category=${category}&apiKey=38a60776992a40faa83f9d95a79a429a`;
 	let xhr = new XMLHttpRequest();
@@ -23,7 +53,7 @@ function NewsRequest(countryLang, category, callback) {
 		if (xhr.status != 200) {
 			var errStatus = xhr.status;
 			var errText = xhr.statusText;
-			console.log(errStatus + ": " + errText);
+			//console.log(errStatus + ": " + errText);
 		}
 		else {
 			var data = JSON.parse(xhr.responseText);
@@ -34,6 +64,23 @@ function NewsRequest(countryLang, category, callback) {
 function Request(url, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open("GET", url, true);
+	xhr.send();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState != 4) return;
+		if (xhr.status != 200) {
+			var errStatus = xhr.status;
+			var errText = xhr.statusText;
+			//console.log(errStatus + ": " + errText);
+		}
+		else {
+			var data = JSON.parse(xhr.responseText);
+			callback(data);
+    		}
+  	};
+}
+function WeatherRequest(urlWeather, callback) {
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", urlWeather, true);
 	xhr.send();
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState != 4) return;
@@ -70,7 +117,7 @@ function GetCurrency(data) {
 	}
 }
 function GetNews(category, data) {
-	console.log(data.articles);
+	//console.log(data.articles);
 	var news = document.querySelector('#'+category);
 	for (let i = 0; i < 5; i++) {
 		let h3 = document.createElement("h3");
@@ -95,4 +142,19 @@ function GetNews(category, data) {
 		author.innerHTML = data.articles[i].author;
 		news.appendChild(author);
 	}
+}
+function GetWeather(data) {
+	let weather = document.querySelector("#weather");
+	let h3=document.createElement("h3");
+	h3.className = "weather";
+	h3.innerHTML = data.name;
+	weather.appendChild(h3);
+	let temp = document.createElement("div");
+	temp.className = "weather";
+	temp.innerHTML = "Поточна температура:  " + data.main.temp + "  " + "&deg" + "C" + "<br />" + "Максимальна температура:  " + data.main.temp_max + "  " + "&deg" + "C" + "<br />" + "Мінімальна температура:  " + data.main.temp_min + "  " + "&deg" + "C";
+	weather.appendChild(temp);
+	let clouds = document.createElement("div");
+	clouds.className = "weather";
+	clouds.innerHTML = "Хмарність: " + data.weather[0].description;
+	weather.appendChild(clouds);
 }
